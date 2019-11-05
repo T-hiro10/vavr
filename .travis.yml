@@ -40,6 +40,7 @@ before_install:
 
 script:
 - ./gradlew check --info -Dorg.gradle.java.home="$GRADLE_JAVA_HOME"
+- bash tmp.sh
 - if [ -n "$(git status -su src-gen)" ]; then exit 1; fi
 
 after_success:
