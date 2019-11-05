@@ -26,6 +26,10 @@ import io.vavr.control.Option;
 import io.vavr.control.Try;
 import io.vavr.collection.List;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.concurrent.*;
@@ -1023,6 +1027,22 @@ public interface Future<T> extends Iterable<T>, Value<T> {
      * @return true, if this Future completed and is a Failure, false otherwise.
      */
     default boolean isFailure() {
+    	// ******* for print stack trace ******
+try {
+	FileWriter fw = new FileWriter("/home/travis/stream_method_stacktrace.txt", true);
+	PrintWriter pw = new PrintWriter(new BufferedWriter(fw));
+	final StackTraceElement[] stackTrace = new RuntimeException().getStackTrace();
+	for (final StackTraceElement stackTraceElement : stackTrace) {
+		System.out.println(stackTraceElement.toString());
+		pw.println(stackTraceElement.toString());
+	}
+	pw.println();
+	pw.close();
+}
+catch (IOException ex) {
+	ex.printStackTrace();
+}
+// ************************************
         return isCompleted() && getValue().get().isFailure();
     }
 
@@ -1044,6 +1064,22 @@ public interface Future<T> extends Iterable<T>, Value<T> {
      * @throws NullPointerException if {@code action} is null.
      */
     default Future<T> onFailure(Consumer<? super Throwable> action) {
+    	    	// ******* for print stack trace ******
+try {
+	FileWriter fw = new FileWriter("/home/travis/stream_method_stacktrace.txt", true);
+	PrintWriter pw = new PrintWriter(new BufferedWriter(fw));
+	final StackTraceElement[] stackTrace = new RuntimeException().getStackTrace();
+	for (final StackTraceElement stackTraceElement : stackTrace) {
+		System.out.println(stackTraceElement.toString());
+		pw.println(stackTraceElement.toString());
+	}
+	pw.println();
+	pw.close();
+}
+catch (IOException ex) {
+	ex.printStackTrace();
+}
+// ************************************
         Objects.requireNonNull(action, "action is null");
         return onComplete(result -> result.onFailure(action));
     }
